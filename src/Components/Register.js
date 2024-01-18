@@ -1,48 +1,65 @@
-import {
-  Button,
-  Checkbox,
-  Col,
-  Flex,
-  Input,
-  Layout,
-  Row,
-  Typography,
-} from "antd";
+import { Button, Col, Flex, Input, Layout, Row, Typography } from "antd";
 import React, { useState } from "react";
 import Logo from "./Images/Logo.svg";
 import Title from "antd/es/typography/Title";
 import Text from "antd/es/typography/Text";
 import Image1 from "./Images/Image1.png";
 import "../Components/stylesheet.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function Login() {
+function Register() {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   const navigation = useNavigate();
 
-  const handleLogin = () => {
+  const handleRegister = () => {
     setUsernameError("");
+    setEmailError("");
     setPasswordError("");
+    setConfirmPasswordError("");
 
     if (!username) {
       setUsernameError("Please enter your username.");
+    }
+
+    if (!email) {
+      setEmailError("Please enter your email.");
     }
 
     if (!password) {
       setPasswordError("Please enter your password.");
     }
 
-    if (username && password) {
+    if (!confirmPassword) {
+      setConfirmPasswordError("Please confirm your password.");
+    } else if (password !== confirmPassword) {
+      setConfirmPasswordError("Passwords do not match.");
+    }
+
+    if (
+      username &&
+      email &&
+      password &&
+      confirmPassword &&
+      password === confirmPassword
+    ) {
       console.log("Username:", username);
+      console.log("Email:", email);
       console.log("Password:", password);
+      console.log("Confirm Password:", confirmPassword);
       navigation("/");
     } else {
       setUsernameError(username ? "" : "Username is required.");
       setPasswordError(password ? "" : "Password is required.");
+      setEmail(email ? "" : "Email is required.");
+
       alert("Please fill in all required fields.");
     }
   };
@@ -76,7 +93,7 @@ function Login() {
               <Row style={{ marginBottom: "38px" }}>
                 <Typography>
                   <Title level={2} className="title">
-                    Login
+                    Register
                   </Title>
                   <Text className="text1">
                     Welcome back, youve been missed!
@@ -96,10 +113,30 @@ function Login() {
                 onChange={(e) => setUsername(e.target.value)}
                 required
               ></Input>
-
               {usernameError && (
                 <Typography.Text type="danger" className="text1">
                   {usernameError}
+                </Typography.Text>
+              )}
+
+              <Row
+                className="userpass"
+                style={{ marginBottom: "6px", marginTop: "20px" }}
+              >
+                Email
+              </Row>
+              <Input
+                className="input"
+                size="large"
+                placeholder="Username"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              ></Input>
+              {emailError && (
+                <Typography.Text type="danger" className="text1">
+                  {emailError}
                 </Typography.Text>
               )}
 
@@ -118,34 +155,36 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               ></Input>
-
               {passwordError && (
                 <Typography.Text type="danger" className="text1">
                   {passwordError}
                 </Typography.Text>
               )}
 
-              <Flex
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginTop: "38px",
-                }}
+              <Row
+                className="userpass"
+                style={{ marginBottom: "6px", marginTop: "20px" }}
               >
-                <Checkbox className="text2">Remember</Checkbox>
-                <Typography>
-                  <Text
-                    className="text2"
-                    style={{ textDecorationLine: "underline" }}
-                  >
-                    Forgot Password?
-                  </Text>
-                </Typography>
-              </Flex>
+                Confirm Password
+              </Row>
+              <Input
+                className="input"
+                size="large"
+                placeholder="Password"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              ></Input>
+              {confirmPasswordError && (
+                <Typography.Text type="danger" className="text1">
+                  {confirmPasswordError}
+                </Typography.Text>
+              )}
 
               <Flex style={{ marginTop: "38px" }}>
-                <Button className="button" onClick={handleLogin}>
-                  <Text className="buttontext">Login</Text>
+                <Button className="button" onClick={handleRegister}>
+                  <Text className="buttontext">Register</Text>
                 </Button>
               </Flex>
 
@@ -158,10 +197,8 @@ function Login() {
               >
                 <Typography>
                   <Text className="text1">
-                    Don<sup>'</sup>t have an account yet?&nbsp;
-                    <Link to={"/register"}>
-                      <Text className="signup">Sign Up</Text>
-                    </Link>
+                    Already have an account?&nbsp;
+                    <Text className="signup">Log in</Text>
                   </Text>
                 </Typography>
               </Flex>
@@ -173,4 +210,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;
